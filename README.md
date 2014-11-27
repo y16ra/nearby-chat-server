@@ -3,6 +3,18 @@ nearby-chat-server
 
 node.js + express4 + socket.io を使ったチャット
 
+# Installing Dependencies
+
+- MongoDB: store a chat data.
+```
+docker run -d -p 27017:27017 --name mongodb dockerfile/mongodb
+```
+
+- redis: store a session data.
+```
+docker run --name redis -d -p 6379:6379 redis redis-server --appendonly yes
+```
+
 # How to install
 
 ```

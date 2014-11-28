@@ -14,7 +14,7 @@ function init(room) {
  */
 function send(room, name) {
     var comment = $('#comment').val();
-    if (comment.length == 0) {
+    if (comment.length === 0) {
         return;
     }
     socket.send( { room: room, name: name, value: comment });
@@ -35,8 +35,10 @@ function unsubscribe(roomName) {
  */
 function update(data) {
     var obj = $(document.createElement('blockquote'));
-    obj.html(data + "<span class='arrow' />");
+    obj.html(data.value + "<span class='arrow' />");
     $('#chatMessages').append(obj);
+    $('#chatMessages').append("<span id='dateTime'>" + data.dateTime + "</span>");
+    $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
 }
 
 

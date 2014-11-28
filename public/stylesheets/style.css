@@ -6,9 +6,9 @@ a {
   color: #00b7ff;
 }
 blockquote {
-  margin: 0 0 10px 0;
+  margin: 10px 0 0 0;
   padding: 0;
-  width: 250px;
+  width: 200px;
   background: #e3e3e3;
   padding: 25px;
   border-radius: 10px;
@@ -26,4 +26,7 @@ blockquote .arrow {
   position: absolute;
   bottom: 60%;
   left: -15px;
+}
+#dateTime {
+  font-size: x-small;
 }

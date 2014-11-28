@@ -21,9 +21,9 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(new TwitterStrategy({
-    consumerKey: "Sm5w2BnHANIvLNGF5PR6Qbvee",
-    consumerSecret: "f68gFehXC3QppITjS0lpxxr3qXsAxTcAUlJlt0ouOcNcTFZXdv",
-    callbackURL: "http://localhost:3000/auth/twitter/callback"
+    consumerKey: conf.twitter.consumerKey,
+    consumerSecret: conf.twitter.consumerSecret,
+    callbackURL: conf.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
   	// ユーザデータを作成する

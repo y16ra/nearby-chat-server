@@ -22,7 +22,8 @@
     "passport": "*",
     "passport-twitter": "*",
     "mongoose": "3.8.19",
-    "mongoose-auto-increment":"*"
+    "mongoose-auto-increment":"*",
+    "config": "*"
   },
   "scripts": {
     "start": "DEBUG=nearby-chat-server:* node-dev ./bin/www"

@@ -9,6 +9,7 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var model = require('../models/model');
 var User = model.User;
 
+var conf = require('config');
 
 // Passport sessionのセットアップ
 passport.serializeUser(function(user, done) {

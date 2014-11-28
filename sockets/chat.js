@@ -1,5 +1,7 @@
 var debug = require('debug')('nearby-chat-server:chat');
 require('date-utils');
+var conf = require('config');
+
 // モデルを定義
 var model = require('../models/model');
 var Room = model.Room;
@@ -13,7 +15,7 @@ var socketIO = require('socket.io');
 
 module.exports = function (server) {
   var io = socketIO.listen(server);
-  var sessionStore = new RedisStore({prefix:'dev.chat:'});
+  var sessionStore = new RedisStore({prefix:conf.session.prefix});
   // クライアントが接続してきたときの処理
   io.sockets.on('connection', function(socket) {
     // 接続イベントを送信
@@ -24,7 +26,10 @@ module.exports = function (server) {
     socket.on('message', function(data) {
 
       // セッションから接続しているユーザ情報を取得
-      var sid = require('cookie-parser/lib/parse').signedCookies(parseCookie(socket.request.headers.cookie), 'hogesecret')['connect.sid'];
+      var sid = require('cookie-parser/lib/parse').signedCookies(
+        parseCookie(socket.request.headers.cookie), 
+        conf.session.secret
+      )[conf.session.sessionid];
       // 送信したユーザの情報を付与してメッセージを配信する
       sessionStore.get(sid, function(err, sessionData){
         debug("send user's sid -> " + sid);

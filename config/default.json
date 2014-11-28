@@ -1,0 +1,16 @@
+{
+	"session": {
+		"secret": "hogesecret",
+		"sessionid": "connect.sid",
+		"prefix": "dev.chat:"
+	},
+	"redis": {
+		"host": "127.0.0.1",
+		"port": 6379
+	},
+	"twitter": {
+	    "consumerKey": "CHANGE_TO_YOUR_KEY",
+	    "consumerSecret": "CHANGE_TO_YOUR_SECRET",
+	    "callbackURL": "http://localhost:3000/auth/twitter/callback"
+	}
+}

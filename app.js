@@ -13,6 +13,8 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var twitter_auth = require('./routes/twitter_auth');
 
+var conf = require('config');
+
 var app = express();
 
 // view engine setup
@@ -27,11 +29,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(session({
-    secret: "hogesecret",
+    secret: conf.session.secret,
     store: new RedisStore({
-        host:'127.0.0.1',
-        port:6379,
-        prefix:'dev.chat:'
+        host:   conf.redis.host,
+        port:   conf.redis.port,
+        prefix: conf.session.prefix
     }),
     cookie: { httpOnly: false },
     resave: false,

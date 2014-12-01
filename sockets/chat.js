@@ -17,19 +17,22 @@ module.exports = function (server) {
   var io = socketIO.listen(server);
   var sessionStore = new RedisStore({prefix:conf.session.prefix});
   // クライアントが接続してきたときの処理
-  io.sockets.on('connection', function(socket) {
+  var ns = io.of('/ws').on('connection', function(socket) {
+
+    // 接続ユーザのセッションIDを取得
+    var sid = require('cookie-parser').signedCookies(
+      parseCookie(socket.request.headers.cookie), 
+      conf.session.secret
+    )[conf.session.sessionid];
+    debug("connected user's sid -> " + sid);
+
     // 接続イベントを送信
-    socket.emit('connected');
+    //socket.emit('connected');
     updateNearbyRooms(socket);
 
     // メッセージを受信したときの処理
     socket.on('message', function(data) {
 
-      // セッションから接続しているユーザ情報を取得
-      var sid = require('cookie-parser/lib/parse').signedCookies(
-        parseCookie(socket.request.headers.cookie), 
-        conf.session.secret
-      )[conf.session.sessionid];
       // 送信したユーザの情報を付与してメッセージを配信する
       sessionStore.get(sid, function(err, sessionData){
         debug("send user's sid -> " + sid);
@@ -40,11 +43,12 @@ module.exports = function (server) {
         // メッセージの受信日時を取得
         data.dateTime = new Date().toFormat("YYYY/MM/DD HH24:MI");
         debug("data -> " + JSON.stringify(data));
+        debug("joined rooms -> " + socket.rooms);
 
         // TODO メッセージを保存する
 
-        // emit
-        io.sockets.emit('message', data);
+        // /wsに接続しているユーザ全体にメッセージを配信
+        ns.emit('message', data);
       });
 
     });
@@ -67,6 +71,17 @@ module.exports = function (server) {
         data.roomId = room.roomId;
         data.dateTime = room.created_at;
         debug("res data -> " + JSON.stringify(data));
+
+        // TODO
+        sessionStore.get(sid, function(err, sessionData){
+          sessionData.room = room;
+          sessionStore.set(sid, sessionData, function(err){
+            if (err) {
+              debug("err occured at sessionStore#set." + err);
+            }
+          });
+        });
+
         updateNearbyRooms(socket);
         // io.sockets.emit('createRoom', data);
       });
@@ -74,7 +89,7 @@ module.exports = function (server) {
     // Roomへ入室
     socket.on('subscribe', function(data) {
       socket.join(data.roomId, function() {
-        debug("subscribe to " + data.roomId + ", rooms " + socket.rooms);
+        debug("================ subscribe to " + data.roomId + ", rooms " + socket.rooms);
 
         // TODO ルーム内の発言を復元する。(数時間分とか範囲を決めてストレージから取得)
 
@@ -86,11 +101,24 @@ module.exports = function (server) {
       if (socket.rooms.indexOf(data.room) < 0) {
         debug("Not found room :" + data.room);
       } else {
-        socket.leave(data.room, function() {
+        socket.leave(data.roomId, function() {
           debug("unsubscribe to " + data.room);
         });
       }
       debug("joined rooms ->" + socket.rooms);
+    });
+
+    socket.on('messageToRoom', function(data) {
+
+      debug("messageToRoom -> " + JSON.stringify(data));
+      debug("joined rooms -> " + socket.rooms);
+      debug("room -> " + data.room);
+      // ルーム内のユーザにメッセージを送信する(自分に届かない版。使えるかも。)
+      //socket.broadcast.to(data.room).emit('message', data);
+      // ルーム内のユーザにメッセージを送信する
+      ns.in(data.room).emit('message', data);
+
+
     });
 
 
@@ -101,6 +129,9 @@ module.exports = function (server) {
 
     // ルーム一覧を一定時間ごとに更新する
     setInterval(function() {
+      // sessionStore.get(sid, function(err, sessionData){
+      //   debug("setInterval : sessiondata room -> " + JSON.stringify(sessionData.room));
+      // });
       updateNearbyRooms(socket);
     }, 30000);
 
@@ -113,11 +144,11 @@ module.exports = function (server) {
     Room.find({
         location: {$nearSphere: [130.0, 35.0]}
       },{},{limit: 5}, function(err, rooms){
-      debug(rooms);
-      for (var idx in rooms) {
-        debug("find data : " + rooms[idx]);
-        debug(rooms[idx].roomId);
-      }
+      // debug(rooms);
+      // for (var idx in rooms) {
+      //   debug("find data : " + rooms[idx]);
+      //   debug(rooms[idx].roomId);
+      // }
       socket.emit('updateNearbyRooms', rooms);
     });  
   }

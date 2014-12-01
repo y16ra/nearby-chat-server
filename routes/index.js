@@ -1,9 +1,13 @@
-var debug = require('debug')('nearby-chat-server');
+var debug = require('debug')('nearby-chat-server:index');
 var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
+		res.redirect('/loby');
+});
+
+router.get('/loby', function(req, res) {
 	if (!req.isAuthenticated()) {
 		res.redirect('/login');
 	}
@@ -13,10 +17,23 @@ router.get('/', function(req, res) {
 
 /* ルーム内チャットページ */
 router.get('/room/:roomId', function(req, res) {
+	if (!req.isAuthenticated()) {
+		res.redirect('/login');
+	}
 	// ルーム名を取得
-
-	// ルーム情報を渡してページを描画
-	res.render('chatRoom', { roomId: req, title: ''});
+	// モデルを定義
+	var model = require('../models/model');
+	var Room = model.Room;
+	var roomName = "";
+	Room.findOne({roomId: req.params.roomId}, function(err, data){
+		if (err) {
+			debug("err : " + err);
+		} else {
+			debug("data : " + data);
+		}
+		// ルーム情報を渡してページを描画
+		res.render('chatRoom', { roomId: req.params.roomId, title: data.name, image_url: req.user.profile_image_url});
+	});
 });
 
 module.exports = router;

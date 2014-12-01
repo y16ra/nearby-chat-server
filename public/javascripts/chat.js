@@ -1,9 +1,15 @@
-var socket = io.connect('/');
+var socket = io.connect('/ws');
 
 function init(room) {
+    // ルームに入室する処理
+    if (room) {
+        subscribe(room);
+    }
+    
     socket.on('connected', function() {
-        socket.emit('message', { room: room, value: "connected room is " + room } );
+        socket.emit('message', { room: room, value: "connected." } );
     });
+
 
     socket.on('message', function(data) {
         update(data);
@@ -17,17 +23,21 @@ function send(room, name) {
     if (comment.length === 0) {
         return;
     }
-    socket.send( { room: room, name: name, value: comment });
+    if (room) {
+        socket.emit('messageToRoom', { room: room, name: name, value: comment });
+    } else {
+        socket.send( { name: name, value: comment });
+    }
     $('#comment').val("");
 }
 
 // 入室
 function subscribe(roomName) {
-    socket.emit('subscribe', { room: roomName } );
+    socket.emit('subscribe', { roomId: roomName } );
 }
 // 退室
 function unsubscribe(roomName) {
-    socket.emit('unsubscribe', { room: roomName } );
+    socket.emit('unsubscribe', { roomId: roomName } );
 }
 
 /* ===============================================

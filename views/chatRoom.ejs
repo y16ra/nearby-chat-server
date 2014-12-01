@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link   rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/javascripts/chat.js"></script>
+    <script type="text/javascript" src="/javascripts/room.js"></script>
+   <script type="text/javascript">
+        $(document).ready( function() {
+            $("#comment").keydown(function(event) {
+              if ( event.which == 13 ) {
+                $("#send").click();
+              }
+            });           
+            $("#send").click(function () {
+                send('<%= roomId %>', 'hogehoge');
+            });
+            $("#create").click(function(){
+                createRoom();
+            });
+            init('<%= roomId %>');
+        });
+        function join_to_room(roomName) {
+            subscribe(roomName);
+        }
+        function leave_from_room(roomName) {
+            unsubscribe(roomName);
+        }
+    </script>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <img src="<%= image_url %>" height=48 width=48/>
+    <div id="chatMessages" style="padding-left:80px;height:300px;overflow:scroll"> 
+    <!-- ここに受信メッセージを追加 -->
+    </div>
+    <div>
+    <form action="#">
+        <input id="comment" style="width:300px;" type="text" value=""  placeholder="メッセージ" /> 
+        <input id="send" type="button" value="send" />
+    </form>
+    </div>
+    <a href="/">Lobyへ戻る</a>
+</body>
+</html>

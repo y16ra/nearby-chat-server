@@ -1,4 +1,4 @@
-var socket = io.connect('/');
+var socket = io.connect('/ws');
 
 // socket.on('createRoom', function(data){
 // 	updateRoom(data);
@@ -43,10 +43,7 @@ function createRoom() {
 
 function updateRoomEntity(data) {
     var obj = $("<div>", {id: "room" + data.roomId});
-    obj.html(data.roomId + ", " + data.name);
-    obj.click(function(){
-        socket.emit('subscribe', { roomId: data.roomId ,roomName: data.name } );
-    });
+    obj.html("<a href=\"/room/" + data.roomId + "\">" + data.name + " #" + data.roomId + "</a>");
     $('#roomList').append(obj);
 }
 function clearRoom(data) {

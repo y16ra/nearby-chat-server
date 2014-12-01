@@ -9,31 +9,17 @@
     <script type="text/javascript" src="/javascripts/room.js"></script>
     <script type="text/javascript">
         $(document).ready( function() {
-            $("#comment").keydown(function(event) {
-              if ( event.which == 13 ) {
-                $("#send").click();
-              }
-            });           
-            $("#send").click(function () {
-                send('test', 'hogehoge');
-            });
             $("#create").click(function(){
                 createRoom();
             });
-            init('test');
         });
-        function join_to_room(roomName) {
-            subscribe(roomName);
-        }
-        function leave_from_room(roomName) {
-            unsubscribe(roomName);
-        }
     </script>
     <title><%= title %></title>
 </head>
 <body>
     <h1><%= title %></h1>
     <h2>近所のルーム</h2>
+    <img src="<%= image_url %>" height=48 width=48/>
     <div id="roomList" style="padding-left:30px;height:100px;overflow:scroll"> 
     <!-- ここにルーム一覧を追加 -->
     </div>
@@ -41,21 +27,5 @@
         <input id="roomName" type="text" value="" placeholder="いま何してる?"/>
         <input id="create" type="button" value="create" />
     </form>
-    <h2>受信メッセージ</h2>
-    <img src="<%= image_url %>" height=48 width=48/>
-    <div id="chatMessages" style="padding-left:80px;height:300px;overflow:scroll"> 
-    <!-- ここに受信メッセージを追加 -->
-    </div>
-    <div>
-    <form action="#">
-        <input id="comment" style="width:300px;" type="text" value="" /> 
-        <input id="send" type="button" value="send" />
-    </form>
-    </div>
-    <hr />
-    <a href="javascript:join_to_room('room1')">room1</a>
-    <a href="javascript:join_to_room('room2')">room2</a>
-    <a href="javascript:leave_from_room('room1')">leave room1</a>
-    <a href="javascript:leave_from_room('room2')">leave room2</a>
 </body>
 </html>

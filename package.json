@@ -18,6 +18,7 @@
     "ejs": "~0.8.5",
     "stylus": "0.42.3",
     "socket.io": "*",
+    "socket.io-redis": "*",
     "date-utils": "*",
     "passport": "*",
     "passport-twitter": "*",

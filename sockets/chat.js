@@ -15,6 +15,10 @@ var socketIO = require('socket.io');
 
 module.exports = function (server) {
   var io = socketIO.listen(server);
+  var ioredis = require('socket.io-redis');
+  io.adapter(ioredis(
+    { host: conf.redis.host , port: conf.redis.port }));
+
   var sessionStore = new RedisStore({prefix:conf.session.prefix});
   // クライアントが接続してきたときの処理
   var ns = io.of('/ws').on('connection', function(socket) {
@@ -110,9 +114,15 @@ module.exports = function (server) {
 
     socket.on('messageToRoom', function(data) {
 
+      data.dateTime = new Date().toFormat("YYYY/MM/DD HH24:MI");
+
       debug("messageToRoom -> " + JSON.stringify(data));
       debug("joined rooms -> " + socket.rooms);
       debug("room -> " + data.room);
+
+      // TODO メッセージを保存する
+
+
       // ルーム内のユーザにメッセージを送信する(自分に届かない版。使えるかも。)
       //socket.broadcast.to(data.room).emit('message', data);
       // ルーム内のユーザにメッセージを送信する

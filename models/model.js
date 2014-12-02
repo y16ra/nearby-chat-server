@@ -20,8 +20,8 @@ RoomSchema.plugin(autoIncrement.plugin, { model: 'Room', field: 'roomId' });
 mongoose.model('Room', RoomSchema);
 var Room = mongoose.model('Room', RoomSchema);
 exports.Room = Room;
-debug('#### Room ####');
 
+// ユーザを管理するスキーマ
 var UserSchema = new Schema({
 	userName: String,
 	token: String,
@@ -29,6 +29,7 @@ var UserSchema = new Schema({
 	location: {lon: Number, lat: Number},
 	twitter_id: Number,
 	profile_image_url: String,
+	twitter: String,
 	created_at: { type: Date, default: Date.now }
 });
 var User = mongoose.model('User', UserSchema);
@@ -36,7 +37,7 @@ exports.User = User;
 
 // チャットメッセージを管理するコレクション
 var PostMessageSchema = new Schema({
-	message: String,
+	message_text: String,
 	location: {lon: Number, lat: Number},
 	like: Number,	// いいね
 	infelicity: Number,	// 不適切な発言

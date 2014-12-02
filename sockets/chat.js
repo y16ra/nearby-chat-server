@@ -6,6 +6,7 @@ var conf = require('config');
 var model = require('../models/model');
 var Room = model.Room;
 var Sequence = model.Sequence;
+var PostMessage = model.PostMessage;
 // セッション情報取得用
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
@@ -76,16 +77,6 @@ module.exports = function (server) {
         data.dateTime = room.created_at;
         debug("res data -> " + JSON.stringify(data));
 
-        // TODO
-        sessionStore.get(sid, function(err, sessionData){
-          sessionData.room = room;
-          sessionStore.set(sid, sessionData, function(err){
-            if (err) {
-              debug("err occured at sessionStore#set." + err);
-            }
-          });
-        });
-
         updateNearbyRooms(socket);
         // io.sockets.emit('createRoom', data);
       });
@@ -94,8 +85,38 @@ module.exports = function (server) {
     socket.on('subscribe', function(data) {
       socket.join(data.roomId, function() {
         debug("================ subscribe to " + data.roomId + ", rooms " + socket.rooms);
+        Room.findOne({roomId: data.roomId}, function(err, room){
+          // TODO
+          sessionStore.get(sid, function(err, sessionData){
+            sessionData.room = room;
+            sessionStore.set(sid, sessionData, function(err){
+              if (err) {
+                debug("err occured at sessionStore#set." + err);
+              }
+            });
+            // TODO ルーム内の発言を復元する。(数時間分とか範囲を決めてストレージから取得)
+            debug("sessionData.room._id -> " + sessionData.room._id);
+            PostMessage.find({room: sessionData.room._id},{},{sort:{created: -1},limit:5})
+              .populate("user")
+              .exec( function(err, post){
 
-        // TODO ルーム内の発言を復元する。(数時間分とか範囲を決めてストレージから取得)
+              if (err) {
+                debug("err -> " + err);
+              } else {
+                debug("data -> " + post);
+              }
+              for (var idx in post) {
+                //postMessage = post[idx].populate("user");
+                debug("roomId -> " + data.roomId);
+                data.value = post[idx].message_text;
+                data.sendFrom = post[idx].user.userName;
+                data.dateTime = post[idx].created_at.toFormat("YYYY/MM/DD HH24:MI");
+                ns.in(data.roomId).emit('message', data);
+              }
+
+            });
+          });
+        });
 
       });
     });
@@ -114,19 +135,37 @@ module.exports = function (server) {
 
     socket.on('messageToRoom', function(data) {
 
-      data.dateTime = new Date().toFormat("YYYY/MM/DD HH24:MI");
+      sessionStore.get(sid, function(err, sessionData){
 
-      debug("messageToRoom -> " + JSON.stringify(data));
-      debug("joined rooms -> " + socket.rooms);
-      debug("room -> " + data.room);
+        data.dateTime = new Date().toFormat("YYYY/MM/DD HH24:MI");
+        data.sendFrom = sessionData.passport.user.userName;
 
-      // TODO メッセージを保存する
+        debug("messageToRoom -> " + JSON.stringify(data));
+        debug("joined rooms -> " + socket.rooms);
+        debug("room -> " + data.room);
+
+        // TODO メッセージを保存する
+        sessionStore.get(sid, function(err, sessionData){
+          postMessage = new PostMessage();
+          postMessage.message_text = data.value;
+          postMessage.user = sessionData.passport.user._id;
+          postMessage.room = sessionData.room._id;
+
+          postMessage.save(function(cb){
+            data.dateTime = postMessage.created_at.toFormat("YYYY/MM/DD HH24:MI");
+          });
+        });
+
+        // ルーム内のユーザにメッセージを送信する(自分に届かない版。使えるかも。)
+        //socket.broadcast.to(data.room).emit('message', data);
+        // ルーム内のユーザにメッセージを送信する
+        ns.in(data.room).emit('message', data);
 
 
-      // ルーム内のユーザにメッセージを送信する(自分に届かない版。使えるかも。)
-      //socket.broadcast.to(data.room).emit('message', data);
-      // ルーム内のユーザにメッセージを送信する
-      ns.in(data.room).emit('message', data);
+
+      });
+
+
 
 
     });
@@ -134,7 +173,9 @@ module.exports = function (server) {
 
     // クライアントが切断したときの処理
     socket.on('disconnect', function(){
-      console.log("disconnect");
+      sessionStore.get(sid, function(err, sessionData){
+        console.log(sessionData.passport.user.userName + " disconnected.");
+      });
     });
 
     // ルーム一覧を一定時間ごとに更新する

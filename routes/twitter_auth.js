@@ -26,6 +26,7 @@ passport.use(new TwitterStrategy({
     callbackURL: conf.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
+    debug("twitter profile -> " + JSON.stringify(profile._json));
   	// ユーザデータを作成する
     User.findOne(
     	{twitter_id: profile._json.id}, 
@@ -39,7 +40,7 @@ passport.use(new TwitterStrategy({
     		user.token_secret = tokenSecret;
     		user.userName = profile.username;
     		user.profile_image_url = profile._json.profile_image_url.replace('_normal','');
-
+        user.twitter = JSON.stringify(profile._json);
     		user.save(function(err){
     			// エラー処理
     			if (err) {
@@ -56,7 +57,7 @@ passport.use(new TwitterStrategy({
 router.get('/twitter', passport.authenticate('twitter'));
 
 router.get('/twitter/callback', 
-  passport.authenticate('twitter', { successRedirect: '/',
+  passport.authenticate('twitter', { successRedirect: '/loby',
                                      failureRedirect: '/login' }));
 
 

@@ -47,7 +47,7 @@ function update(data) {
     var obj = $(document.createElement('blockquote'));
     obj.html(data.value + "<span class='arrow' />");
     $('#chatMessages').append(obj);
-    $('#chatMessages').append("<span id='dateTime'>" + data.dateTime + "</span>");
+    $('#chatMessages').append("<span id='dateTime'>" + data.dateTime + " from " + data.sendFrom + "</span>");
     $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
 }
 

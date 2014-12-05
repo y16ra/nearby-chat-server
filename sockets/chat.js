@@ -96,7 +96,8 @@ module.exports = function (server) {
             });
             // TODO ルーム内の発言を復元する。(数時間分とか範囲を決めてストレージから取得)
             debug("sessionData.room._id -> " + sessionData.room._id);
-            PostMessage.find({room: sessionData.room._id},{},{sort:{created: -1},limit:5})
+            // ルーム内の発言の最新の１０件を取得
+            PostMessage.find({room: sessionData.room._id},{},{sort:{created_at: -1},limit:10})
               .populate("user")
               .exec( function(err, post){
 
@@ -105,11 +106,12 @@ module.exports = function (server) {
               } else {
                 debug("data -> " + post);
               }
+              post.reverse();
               for (var idx in post) {
-                //postMessage = post[idx].populate("user");
                 debug("roomId -> " + data.roomId);
                 data.value = post[idx].message_text;
                 data.sendFrom = post[idx].user.userName;
+                data.profile_image_url = post[idx].user.profile_image_url;
                 data.dateTime = post[idx].created_at.toFormat("YYYY/MM/DD HH24:MI");
                 ns.in(data.roomId).emit('message', data);
               }
@@ -139,6 +141,7 @@ module.exports = function (server) {
 
         data.dateTime = new Date().toFormat("YYYY/MM/DD HH24:MI");
         data.sendFrom = sessionData.passport.user.userName;
+        data.profile_image_url = sessionData.passport.user.profile_image_url;
 
         debug("messageToRoom -> " + JSON.stringify(data));
         debug("joined rooms -> " + socket.rooms);
@@ -152,16 +155,18 @@ module.exports = function (server) {
           postMessage.room = sessionData.room._id;
 
           postMessage.save(function(cb){
-            data.dateTime = postMessage.created_at.toFormat("YYYY/MM/DD HH24:MI");
+            if (cb) {
+              debug(cb);
+            } else {
+              debug("ok.");
+            }
+            // ルーム内のユーザにメッセージを送信する(自分に届かない版。使えるかも。)
+            //socket.broadcast.to(data.room).emit('message', data);
+            // ルーム内のユーザにメッセージを送信する
+            debug("emit");
+            ns.in(data.room).emit('message', data);
           });
         });
-
-        // ルーム内のユーザにメッセージを送信する(自分に届かない版。使えるかも。)
-        //socket.broadcast.to(data.room).emit('message', data);
-        // ルーム内のユーザにメッセージを送信する
-        ns.in(data.room).emit('message', data);
-
-
 
       });
 

@@ -1,7 +1,0 @@
-{
-	"twitter": {
-	    "consumerKey": "CHANGE_TO_YOUR_KEY",
-	    "consumerSecret": "CHANGE_TO_YOUR_SECRET",
-	    "callbackURL": "http://localhost:3000/auth/twitter/callback"
-	}
-}

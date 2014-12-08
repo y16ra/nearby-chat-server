@@ -13,8 +13,8 @@
 		"port": 27017
 	},
 	"twitter": {
-	    "consumerKey": "Sm5w2BnHANIvLNGF5PR6Qbvee",
-	    "consumerSecret": "f68gFehXC3QppITjS0lpxxr3qXsAxTcAUlJlt0ouOcNcTFZXdv",
+	    "consumerKey": "CHANGE_TO_YOUR_KEY",
+	    "consumerSecret": "CHANGE_TO_YOUR_SECRET",
 	    "callbackURL": "http://localhost:3000/auth/twitter/callback"
 	}
 }

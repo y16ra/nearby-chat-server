@@ -8,9 +8,13 @@
 		"host": "127.0.0.1",
 		"port": 6379
 	},
+	"mongodb": {
+		"host": "127.0.0.1",
+		"port": 27017
+	},
 	"twitter": {
-	    "consumerKey": "CHANGE_TO_YOUR_KEY",
-	    "consumerSecret": "CHANGE_TO_YOUR_SECRET",
+	    "consumerKey": "Sm5w2BnHANIvLNGF5PR6Qbvee",
+	    "consumerSecret": "f68gFehXC3QppITjS0lpxxr3qXsAxTcAUlJlt0ouOcNcTFZXdv",
 	    "callbackURL": "http://localhost:3000/auth/twitter/callback"
 	}
 }

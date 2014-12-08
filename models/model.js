@@ -1,8 +1,14 @@
 var debug = require('debug')('nearby-chat-server:model');
-var mongoose = require('mongoose');
-var autoIncrement = require('mongoose-auto-increment');
-var conn = mongoose.connect('mongodb://localhost/chat_db');
+var conf = require('config');
 
+// MongoDBの接続情報
+var mongoose = require('mongoose');
+var mongoHost = process.env.MONGODB_PORT_28017_TCP_ADDR || conf.mongodb.host;
+var mongoPort = process.env.MONGODB_PORT_27017_TCP_PORT || conf.mongodb.port;
+var dbName = "/chat_db";
+var conn = mongoose.connect('mongodb://' + mongoHost + ":" + mongoPort + dbName);
+
+var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(conn);
 
 // スキーマ定義

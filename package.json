@@ -27,6 +27,6 @@
     "config": "*"
   },
   "scripts": {
-    "start": "DEBUG=nearby-chat-server:* node-dev ./bin/www"
+    "start": "DEBUG=nearby-chat-server:* NODE_ENV=dev node-dev ./bin/www"
   }
 }

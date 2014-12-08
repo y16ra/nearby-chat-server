@@ -16,9 +16,13 @@ var socketIO = require('socket.io');
 
 module.exports = function (server) {
   var io = socketIO.listen(server);
+  // redisに接続情報を保存する
   var ioredis = require('socket.io-redis');
   io.adapter(ioredis(
-    { host: conf.redis.host , port: conf.redis.port }));
+    {
+      host: process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+      port: conf.redis.port
+    }));
 
   var sessionStore = new RedisStore({prefix:conf.session.prefix});
   // クライアントが接続してきたときの処理

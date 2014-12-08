@@ -21,7 +21,7 @@ docker run --name redis -d -p 6379:6379 redis redis-server --appendonly yes
 npm install
 ```
 
-twitterのconsumerkey, secretはご自身で設定した内容をconfig以下のファイルに記載してください。
+twitterのconsumerkey, secretはご自身で取得して、config以下のファイルに記載してください。
 間違ってコミットしてしまっていたkey, secretは再取得して無効になっています。
 
 # How to launch

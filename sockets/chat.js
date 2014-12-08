@@ -24,7 +24,12 @@ module.exports = function (server) {
       port: conf.redis.port
     }));
 
-  var sessionStore = new RedisStore({prefix:conf.session.prefix});
+  var sessionStore = new RedisStore(
+    {
+      host:   process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+      port:   conf.redis.port,
+      prefix:conf.session.prefix
+    });
   // クライアントが接続してきたときの処理
   var ns = io.of('/ws').on('connection', function(socket) {
 
@@ -91,6 +96,7 @@ module.exports = function (server) {
         debug("================ subscribe to " + data.roomId + ", rooms " + socket.rooms);
         Room.findOne({roomId: data.roomId}, function(err, room){
           // TODO
+
           sessionStore.get(sid, function(err, sessionData){
             sessionData.room = room;
             sessionStore.set(sid, sessionData, function(err){

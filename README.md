@@ -16,9 +16,17 @@ docker run --name redis -d -p 6379:6379 redis redis-server --appendonly yes
 ```
 
 # How to install
+## git clone
+```
+git clone https://github.com/y16ra/nearby-chat-server.git
+cd nearby-chat-server
+npm install
+```
+
+## use docker container
 
 ```
-npm install
+docker run -d --name nearby-chat-server -p 3000:3000 --link redis:redis --link mongodb:mongodb y16ra/nearby-chat-server
 ```
 
 twitterのconsumerkey, secretはご自身で取得して、config以下のファイルに記載してください。

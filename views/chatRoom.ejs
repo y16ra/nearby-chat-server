@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width">
     <link   rel="stylesheet" type="text/css" href="/stylesheets/style.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/footerFixed.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="/javascripts/chat.js"></script>
     <script type="text/javascript" src="/javascripts/room.js"></script>
@@ -37,9 +38,9 @@
     <div id="chatMessages"> 
     <!-- ここに受信メッセージを追加 -->
     </div>
-    <div>
+    <div id="footer">
     <form action="#">
-        <input id="comment" style="width:300px;" type="text" value=""  placeholder="メッセージ" /> 
+        <input id="comment" style="width:260px;" type="text" value=""  placeholder="メッセージ" /> 
         <input id="send" type="button" value="send" />
     </form>
     </div>

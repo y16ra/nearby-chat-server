@@ -48,7 +48,7 @@ function update(data) {
     var obj = $(document.createElement('blockquote'));
     obj.html(data.value + "<span class='arrow' />");
     bubble.addClass('bubble');
-    bubble.append('<div class="icon"><img class="icon_img" src="' + data.profile_image_url + '" height="48" width="48/"></div>');
+    bubble.append('<div class="icon"><img class="icon_img" src="' + data.profile_image_url + '" height="36" width="36/"></div>');
     bubble.append(obj);
     bubble.append("<span class='dateTime'>" + data.dateTime + " from " + data.sendFrom + "</span>");
     $('#chatMessages').append(bubble);

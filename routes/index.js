@@ -20,6 +20,10 @@ router.get('/webhook', function(req, res) {
     debug("data -> " + JSON.stringify(req.data));
 	res.send("OK");
 });
+router.post('/webhook', function(req, res) {
+    debug("data -> " + JSON.stringify(req.data));
+	res.send("success");
+});
 
 /* ルーム内チャットページ */
 router.get('/room/:roomId', function(req, res) {

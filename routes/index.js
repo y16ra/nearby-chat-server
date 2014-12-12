@@ -15,6 +15,12 @@ router.get('/loby', function(req, res) {
 	res.render('index', { title: 'Loby', image_url: req.user.profile_image_url });
 });
 
+// GitHub webhook
+router.get('/webhook', function(req, res) {
+    debug("data -> " + JSON.stringify(req.data));
+	res.send("OK");
+});
+
 /* ルーム内チャットページ */
 router.get('/room/:roomId', function(req, res) {
 	if (!req.isAuthenticated()) {

@@ -1,6 +1,9 @@
 var debug = require('debug')('nearby-chat-server:index');
 var express = require('express');
 var router = express.Router();
+// 外部コマンドを実行する
+var exec  = require('child_process').exec;
+var conf = require('config');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -15,13 +18,20 @@ router.get('/loby', function(req, res) {
 	res.render('index', { title: 'Loby', image_url: req.user.profile_image_url });
 });
 
-// GitHub webhook
-router.get('/webhook', function(req, res) {
+// for GitHub webhook
+router.all('/webhook', function(req, res) {
     debug("data -> " + JSON.stringify(req.data));
-	res.send("OK");
-});
-router.post('/webhook', function(req, res) {
-    debug("data -> " + JSON.stringify(req.data));
+    var cmd = exec("git pull", {
+        cwd: conf.deploy.dir
+    }, function(error, stdout, stderr) {
+        if (error) {
+            debug(">  ERROR (error): " + error);
+        }
+        if (stderr && error) {
+            debug(">  ERROR (error): " + error);
+        }
+        debug("> DONE! " + stdout);
+    });
 	res.send("success");
 });
 

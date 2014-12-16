@@ -13,10 +13,12 @@ var conf = require('config');
 
 // Passport sessionのセットアップ
 passport.serializeUser(function(user, done) {
+  debug("serializeUser : " + user);
 	done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
+  debug("deserializeUser : " + user);
 	done(null, user);
 });
 
@@ -41,13 +43,15 @@ passport.use(new TwitterStrategy({
     		user.userName = profile.username;
     		user.profile_image_url = profile._json.profile_image_url.replace('_normal','');
         user.twitter = JSON.stringify(profile._json);
+        // ユーザ情報を更新してMongoDBに保存
     		user.save(function(err){
     			// エラー処理
     			if (err) {
 				  	return done(err, false);
-    			}
+    			} else {
+            return done(null, user);
+          }
     		});
-		  	return done(null, user);
     	});
   }
 ));

@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
 
 router.get('/loby', function(req, res) {
 	if (!req.isAuthenticated()) {
-		res.redirect('/login');
+		return res.redirect('/login');
 	}
 	// ロビーページ表示
 	res.render('index', { title: 'Loby', image_url: req.user.profile_image_url });
@@ -27,8 +27,8 @@ router.post('/webhook', function(req, res) {
 
 /* ルーム内チャットページ */
 router.get('/room/:roomId', function(req, res) {
-	if (!req.isAuthenticated()) {
-		res.redirect('/login');
+	if (!req.isAuthenticated() || !req.user) {
+		return res.redirect('/login');
 	}
 	// ルーム名を取得
 	// モデルを定義

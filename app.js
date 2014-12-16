@@ -27,9 +27,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
 app.use(session({
-    secret: conf.session.secret,
+    secret: process.env.SESSION_SECRET || conf.session.secret,
     store: new RedisStore({
         host:   process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
         port:   conf.redis.port,
@@ -39,6 +38,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
+// passport
 app.use(passport.initialize());
 app.use(passport.session());
 

@@ -11,6 +11,9 @@ var PostMessage = model.PostMessage;
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var parseCookie = require('cookie').parse;
+var url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL || "");
+
 // socket.io
 var socketIO = require('socket.io');
 
@@ -20,14 +23,14 @@ module.exports = function (server) {
   var ioredis = require('socket.io-redis');
   io.adapter(ioredis(
     {
-      host: process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
-      port: conf.redis.port
+      host: redisURL.host || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+      port: redisURL.port || conf.redis.port
     }));
 
   var sessionStore = new RedisStore(
     {
-      host:   process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
-      port:   conf.redis.port,
+      host:   redisURL.host || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+      port:   redisURL.port || conf.redis.port,
       prefix:conf.session.prefix
     });
   // クライアントが接続してきたときの処理

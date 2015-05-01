@@ -24,14 +24,16 @@ module.exports = function (server) {
   io.adapter(ioredis(
     {
       host: redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
-      port: redisURL.port || conf.redis.port
+      port: redisURL.port || conf.redis.port,
+      auth: redisURL.auth
     }));
 
   var sessionStore = new RedisStore(
     {
       host:   redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
       port:   redisURL.port || conf.redis.port,
-      prefix:conf.session.prefix
+      prefix:conf.session.prefix,
+      auth: redisURL.auth
     });
   // クライアントが接続してきたときの処理
   var ns = io.of('/ws').on('connection', function(socket) {

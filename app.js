@@ -38,7 +38,8 @@ app.use(session({
     store: new RedisStore({
         host:   redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
         port:   redisURL.port || conf.redis.port,
-        prefix: conf.session.prefix
+        prefix: conf.session.prefix,
+        auth:   redisURL.auth
     }),
     cookie: { httpOnly: false },
     resave: false,

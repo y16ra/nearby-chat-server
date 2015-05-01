@@ -23,13 +23,13 @@ module.exports = function (server) {
   var ioredis = require('socket.io-redis');
   io.adapter(ioredis(
     {
-      host: redisURL.host || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+      host: redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
       port: redisURL.port || conf.redis.port
     }));
 
   var sessionStore = new RedisStore(
     {
-      host:   redisURL.host || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+      host:   redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
       port:   redisURL.port || conf.redis.port,
       prefix:conf.session.prefix
     });

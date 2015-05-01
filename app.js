@@ -36,7 +36,7 @@ app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET || conf.session.secret,
     store: new RedisStore({
-        host:   redisURL.host || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+        host:   redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
         port:   redisURL.port || conf.redis.port,
         prefix: conf.session.prefix
     }),

@@ -20,12 +20,14 @@ var app = express();
 
 var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL || "");
-var redisPass = null;
-if (redisURL.auth) {
-     redisPass = redisURL.auth.split(":")[1];
+var redis = require('redis')
+var client = redis.createClient(
+    redisURL.port || conf.redis.port, 
+    redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host, 
+    {no_ready_check: true});
+if (process.env.REDISCLOUD_URL) {
+    client.auth(redisURL.auth.split(":")[1]);
 }
-debug(redisURL);
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,10 +42,7 @@ app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET || conf.session.secret,
     store: new RedisStore({
-        host:   redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
-        port:   redisURL.port || conf.redis.port,
-        prefix: conf.session.prefix,
-        auth:   redisPass
+        client: client
     }),
     cookie: { httpOnly: false },
     resave: false,

@@ -13,9 +13,13 @@ var RedisStore = require('connect-redis')(session);
 var parseCookie = require('cookie').parse;
 var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL || "");
-var redisPass = null;
-if (redisURL.auth) {
-     redisPass = redisURL.auth.split(":")[1];
+var redis = require('redis')
+var client = redis.createClient(
+    redisURL.port || conf.redis.port, 
+    redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host, 
+    {no_ready_check: true});
+if (process.env.REDISCLOUD_URL) {
+    client.auth(redisURL.auth.split(":")[1]);
 }
 
 // socket.io
@@ -27,17 +31,12 @@ module.exports = function (server) {
   var ioredis = require('socket.io-redis');
   io.adapter(ioredis(
     {
-      host: redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
-      port: redisURL.port || conf.redis.port,
-      auth: redisPass
+      client: client
     }));
 
   var sessionStore = new RedisStore(
     {
-      host:   redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
-      port:   redisURL.port || conf.redis.port,
-      prefix:conf.session.prefix,
-      auth: redisPass
+      client: client
     });
   // クライアントが接続してきたときの処理
   var ns = io.of('/ws').on('connection', function(socket) {

@@ -23,9 +23,9 @@ passport.deserializeUser(function(user, done) {
 });
 
 passport.use(new TwitterStrategy({
-    consumerKey: conf.twitter.consumerKey,
-    consumerSecret: conf.twitter.consumerSecret,
-    callbackURL: conf.twitter.callbackURL
+    consumerKey: process.env.TWITTER_CONSUMER_KEY || conf.twitter.consumerKey,
+    consumerSecret: process.env.TWITTER_CONSUMER_SECRET || conf.twitter.consumerSecret,
+    callbackURL: process.env.TWITTER_CALLBACK_URL || conf.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
     debug("twitter profile -> " + JSON.stringify(profile._json));

@@ -1,3 +1,4 @@
+var debug = require('debug')('nearby-chat-server:app');
 var express = require('express');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
@@ -17,6 +18,11 @@ var conf = require('config');
 
 var app = express();
 
+var url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL || "");
+debug(redisURL);
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -30,8 +36,8 @@ app.use(cookieParser());
 app.use(session({
     secret: process.env.SESSION_SECRET || conf.session.secret,
     store: new RedisStore({
-        host:   process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
-        port:   conf.redis.port,
+        host:   redisURL.host || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
+        port:   redisURL.port || conf.redis.port,
         prefix: conf.session.prefix
     }),
     cookie: { httpOnly: false },

@@ -22,8 +22,8 @@
     "date-utils": "*",
     "passport": "*",
     "passport-twitter": "*",
-    "mongoose": "3.8.19",
-    "mongoose-auto-increment":"*",
+    "mongoose": "~4.0.2",
+    "mongoose-auto-increment":"~4.0.0",
     "config": "*"
   },
   "scripts": {

@@ -20,6 +20,10 @@ var app = express();
 
 var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL || "");
+var redisPass = null;
+if (redisURL.auth) {
+     redisPass = redisURL.auth.split(":")[1];
+}
 debug(redisURL);
 
 
@@ -39,7 +43,7 @@ app.use(session({
         host:   redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host,
         port:   redisURL.port || conf.redis.port,
         prefix: conf.session.prefix,
-        auth:   redisURL.auth
+        auth:   redisPass
     }),
     cookie: { httpOnly: false },
     resave: false,

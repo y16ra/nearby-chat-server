@@ -11,6 +11,8 @@ router.get('/', function(req, res) {
 });
 
 router.get('/loby', function(req, res) {
+	debug(req);
+	debug(req.user);
 	if (!req.user) {
 		return res.redirect('/login');
 	}

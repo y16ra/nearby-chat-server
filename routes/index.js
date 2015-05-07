@@ -11,12 +11,12 @@ router.get('/', function(req, res) {
 });
 
 router.get('/loby', function(req, res) {
-	debug(req);
-	debug(req.user);
 	if (!req.user) {
+		debug("user data not found.");
 		return res.redirect('/login');
 	}
 	// ロビーページ表示
+	debug("### To loby." + JSON.stringify(req.user));
 	res.render('index', { title: 'Loby', image_url: req.user.profile_image_url });
 });
 

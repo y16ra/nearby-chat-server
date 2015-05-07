@@ -28,7 +28,7 @@ passport.use(new TwitterStrategy({
     callbackURL: process.env.TWITTER_CALLBACK_URL || conf.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
-    debug("twitter profile -> " + JSON.stringify(profile._json));
+    debug("### twitter profile -> " + JSON.stringify(profile._json));
   	// ユーザデータを作成する
     User.findOne(
     	{twitter_id: profile._json.id}, 
@@ -45,10 +45,13 @@ passport.use(new TwitterStrategy({
         user.twitter = JSON.stringify(profile._json);
         // ユーザ情報を更新してMongoDBに保存
     		user.save(function(err){
+          debug("### Save user data.");
     			// エラー処理
     			if (err) {
+            debug(err);
 				  	return done(err, false);
     			} else {
+            debug(user);
             return done(null, user);
           }
     		});

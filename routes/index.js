@@ -19,21 +19,21 @@ router.get('/loby', function(req, res) {
 });
 
 // for GitHub webhook
-router.all('/webhook', function(req, res) {
-    debug("data -> " + JSON.stringify(req.data));
-    var cmd = exec("git pull", {
-        cwd: conf.deploy.dir
-    }, function(error, stdout, stderr) {
-        if (error) {
-            debug(">  ERROR (error): " + error);
-        }
-        if (stderr && error) {
-            debug(">  ERROR (error): " + error);
-        }
-        debug("> DONE! " + stdout);
-    });
-	res.send("success");
-});
+//router.all('/webhook', function(req, res) {
+//    debug("data -> " + JSON.stringify(req.data));
+//    var cmd = exec("git pull", {
+//        cwd: conf.deploy.dir
+//    }, function(error, stdout, stderr) {
+//        if (error) {
+//            debug(">  ERROR (error): " + error);
+//        }
+//        if (stderr && error) {
+//            debug(">  ERROR (error): " + error);
+//        }
+//        debug("> DONE! " + stdout);
+//    });
+//	res.send("success");
+//});
 
 /* ルーム内チャットページ */
 router.get('/room/:roomId', function(req, res) {

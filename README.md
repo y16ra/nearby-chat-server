@@ -38,6 +38,37 @@ twitterのconsumerkey, secretはご自身で取得して、config以下のファ
 npm start
 ```
 
+# デモサイト ~ Demo Site
+このソースをHerokuにデプロイして動かしています。
+
+https://nearby-chat-server.herokuapp.com/
+
+## How to Deploy to Heroku
+- Herokuにアプリを追加する
+
+- RedisとMongoDBのaddonを追加する
+
+|addon||
+|-|-|
+|MongoLab|環境変数に MONGOLAB_URI が追加されます|
+|Redis Cloud|環境変数に REDISCLOUD_URL が追加されます|
+
+- RedisとMongoDBの設定情報を確認する
+
+```
+$ heroku config
+```
+
+- 環境変数の設定をする
+
+|Key|Value|
+|-------------|-----------|
+|MONGOLAB_URI|MongoDBの接続URLを設定する|
+|REDISCLOUD_URL|Redisの接続URLを設定する|
+|TWITTER_CALLBACK_URL|Twitter認証後にコールバックされるURL|
+|TWITTER_CONSUMER_KEY|Twitterのconsumer key|
+|TWITTER_CONSUMER_SECRET|Twitterのconsumer secret|
+
 # 今後の拡張
 少しずつ育てて行く予定。
 野望は以下の通り。

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev-start": "DEBUG=nearby-chat-server:*, NODE_ENV=dev node-dev ./bin/www",
+    "dev-start": "DEBUG=nearby-chat-server:*, node-dev ./bin/www",
     "start": "node ./bin/www"
   },
   "dependencies": {

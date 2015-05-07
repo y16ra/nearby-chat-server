@@ -13,13 +13,20 @@ var RedisStore = require('connect-redis')(session);
 var parseCookie = require('cookie').parse;
 var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL || "");
-var redis = require('redis')
-var client = redis.createClient(
-    redisURL.port || conf.redis.port, 
-    redisURL.hostname || process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host, 
-    {no_ready_check: true});
+var redis = require('redis');
+var client;
 if (process.env.REDISCLOUD_URL) {
-    client.auth(redisURL.auth.split(":")[1]);
+  client = redis.createClient(
+    redisURL.port, 
+    redisURL.hostname, 
+    {no_ready_check: true}
+  );  
+  client.auth(redisURL.auth.split(":")[1]);
+} else {
+  client = redis.createClient(
+    conf.redis.port, 
+    process.env.REDIS_PORT_6379_TCP_ADDR || conf.redis.host
+  );  
 }
 
 // socket.io
@@ -28,16 +35,20 @@ var socketIO = require('socket.io');
 module.exports = function (server) {
   var io = socketIO.listen(server);
   // redisに接続情報を保存する
-  var ioredis = require('socket.io-redis');
-  io.adapter(ioredis(
+  var ioredis = require('redis').createClient;
+  var adapter = require('socket.io-redis');
+  var pub = ioredis(redisURL.port, redisURL.hostname, { auth_pass: redisURL.auth.split(":")[1] });
+  var sub = ioredis(redisURL.port, redisURL.hostname, { detect_buffers: true, auth_pass: redisURL.auth.split(":")[1] });
+  io.adapter(adapter(
     {
-      client: client
+      pubClient: pub, subClient: sub
     }));
 
   var sessionStore = new RedisStore(
-    {
+  {
       client: client
-    });
+  });
+    
   // クライアントが接続してきたときの処理
   var ns = io.of('/ws').on('connection', function(socket) {
 

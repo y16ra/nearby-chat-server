@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/loby', function(req, res) {
-	if (!req.isAuthenticated()) {
+	if (!req.user) {
 		return res.redirect('/login');
 	}
 	// ロビーページ表示
@@ -37,7 +37,7 @@ router.get('/loby', function(req, res) {
 
 /* ルーム内チャットページ */
 router.get('/room/:roomId', function(req, res) {
-	if (!req.isAuthenticated() || !req.user) {
+	if (!req.user) {
 		return res.redirect('/login');
 	}
 	// ルーム名を取得

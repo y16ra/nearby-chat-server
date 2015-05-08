@@ -1,6 +1,7 @@
 node_modules
+gcp/
 *.log
 *.bak
 config/dev.json
 style.css
-
+chat-server-start.sh

@@ -97,7 +97,7 @@ module.exports = function (server) {
 
       // ルームを作成
       room = new Room();
-      room.name = data.roomName;
+      room.name = xssFilters.inHTMLData(data.roomName);
       room.location = data.location;
       room.save(function(cb){
         debug(cb);
@@ -232,7 +232,7 @@ module.exports = function (server) {
   function updateNearbyRooms(socket) {
     Room.find({
         location: {$nearSphere: [130.0, 35.0]}
-      },{},{limit: 5}, function(err, rooms){
+      },{},{limit: 30}, function(err, rooms){
       // debug(rooms);
       // for (var idx in rooms) {
       //   debug("find data : " + rooms[idx]);

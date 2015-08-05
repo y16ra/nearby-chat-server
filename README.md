@@ -48,8 +48,8 @@ https://nearby-chat-server.herokuapp.com/
 
 - RedisとMongoDBのaddonを追加する
 
-|addon||
-|-|-|
+|addon|setting|
+|-----|-----|
 |MongoLab|環境変数に MONGOLAB_URI が追加されます|
 |Redis Cloud|環境変数に REDISCLOUD_URL が追加されます|
 

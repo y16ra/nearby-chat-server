@@ -5,3 +5,4 @@ gcp/
 config/dev.json
 style.css
 chat-server-start.sh
+.DS_Store

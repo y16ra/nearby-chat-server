@@ -29,6 +29,9 @@ if (process.env.REDISCLOUD_URL) {
   );  
 }
 
+// for xss
+var xssFilters = require('xss-filters');
+
 // socket.io
 var socketIO = require('socket.io');
 
@@ -179,6 +182,7 @@ module.exports = function (server) {
         // TODO メッセージを保存する
         sessionStore.get(sid, function(err, sessionData){
           postMessage = new PostMessage();
+          data.value = xssFilters.inHTMLData(data.value);
           postMessage.message_text = data.value;
           postMessage.user = sessionData.passport.user._id;
           postMessage.room = sessionData.room._id;

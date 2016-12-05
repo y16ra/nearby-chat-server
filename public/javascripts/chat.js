@@ -10,7 +10,6 @@ function init(room) {
         socket.emit('message', { room: room, value: "connected." } );
     });
 
-
     socket.on('message', function(data) {
         update(data);
     });

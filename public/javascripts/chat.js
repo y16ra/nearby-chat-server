@@ -44,20 +44,13 @@ function unsubscribe(roomName) {
  * 受信したメッセージをページに追加する処理
  */
 function update(data) {
-    var bubble = $(document.createElement('div'));
     var obj = $(document.createElement('blockquote'));
     obj.html(data.value + "<span class='arrow' />");
+    var bubble = $(document.createElement('div'));
     bubble.addClass('bubble');
     bubble.append('<div class="icon"><img class="icon_img" src="' + data.profile_image_url + '" height="36" width="36/"></div>');
     bubble.append(obj);
     bubble.append("<span class='dateTime'>" + data.dateTime + " from " + data.sendFrom + "</span>");
     $('#chatMessages').append(bubble);
-
-    // $('#chatMessages').append('<div class="icon"><img class="icon_img" src="' + data.profile_image_url + '" height="48" width="48/"></div>');
-    // $('#chatMessages').append(obj);
-    // $('#chatMessages').append("<span class='dateTime'>" + data.dateTime + " from " + data.sendFrom + "</span>");
     $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
 }
-
-
-

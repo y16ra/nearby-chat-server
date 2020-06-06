@@ -2,6 +2,9 @@
   "name": "nearby-chat-server",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "dev-start": "DEBUG=nearby-chat-server:*, node-dev ./bin/www",
     "start": "node ./bin/www"

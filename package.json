@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": "12.x"
+    "node": "8.9.4",
+    "npm": ">= 3.0.0"
   },
   "scripts": {
     "dev-start": "DEBUG=nearby-chat-server:*, node-dev ./bin/www",

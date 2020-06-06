@@ -21,7 +21,7 @@
     "express": "~4.9.0",
     "express-session": "~1.9.2",
     "gcloud": "^0.37.0",
-    "mongoose": "^4.0.8",
+    "mongoose": "^5.9.18",
     "mongoose-auto-increment": "~4.0.0",
     "morgan": "~1.10.0",
     "passport": "*",
